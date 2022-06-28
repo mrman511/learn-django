@@ -4,7 +4,13 @@ import uuid
 # !! https://docs.djangoproject.com/en/4.0/ref/contrib/auth/ !!!
 from django.contrib.auth.models import User
 
+
+
 # Create your models here.
+
+# !!!https://docs.djangoproject.com/en/4.0/topics/signals/!!!
+
+
 class Profile(models.Model):
   # attributes
   user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True,)
@@ -36,3 +42,5 @@ class Skill(models.Model):
 
   def __str__(self):
     return str(self.name)
+
+
