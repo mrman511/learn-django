@@ -6,12 +6,8 @@ from .forms import ProjectForm
 
 # Create your views here.
 def projects(request):
-  msg = 'You are on the projects page'
-  num = 10
   projects = Project.objects.all()
   context = {
-    'msg': msg, 
-    'num':10,
     'projects': projects
     }
   return render(request, 'projects/projects.html', context)
