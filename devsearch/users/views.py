@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import User
 from .models import Profile
-from .forms import CustomUserCreationForm
+from .forms import CustomUserCreationForm, ProfileForm
 
 def loginUser(request):
   page = "login"
@@ -24,7 +24,7 @@ def loginUser(request):
 
     if user is not None:
       login(request, user)
-      return redirect('profiles')
+      return redirect('account')
     else:
       messages.error(request, "Username or password is incorrect")
 
@@ -51,7 +51,7 @@ def registerUser(request):
 
       messages.success(request, "User account has been created")
       login(request, user)
-      return redirect('profiles')
+      return redirect('edit-account')
     
     else:
       messages.error(request, 'An error has occurred during registation')
@@ -93,3 +93,30 @@ def userProfile(request, pk):
   }
 
   return render(request, 'users/user-profile.html', context)
+
+@login_required(login_url="login")
+def userAccount(request):
+  profile = request.user.profile
+  print(profile)
+  context = {
+    'profile': profile
+    }
+  return render(request, 'users/account.html', context)
+
+@login_required(login_url="login")
+def editAccount(request):
+  form = ProfileForm()
+  profile = request.user.profile
+
+  if request.method=='POST':
+    form = ProfileForm(request.POST, request.FILES, instance=profile)
+    print("PROFILEFORM", form)
+    if form.is_valid():
+      form.save();
+
+      return redirect('account')
+   
+  context = {
+    'form': form
+  }
+  return render(request, 'users/profile_form.html', context)

@@ -641,7 +641,6 @@ img {
 .auth {
   width: 100%;
   position: relative;
-  
   background: transparent;
   height: 99vh;
   display: flex;
