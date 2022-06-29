@@ -1,14 +1,14 @@
 .alert {
 
-  display: inline-flex;
+  display: flex;
   gap: 3rem;
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem 2.5rem;
   border-radius: 3px;
   border: 1px solid var(--color-white-light);
-  margin-bottom: 1rem;
-  margin-right: 1rem;
+  margin: 1rem auto; 
+  max-width: 350px;
 }
 
 .alert,
@@ -32,6 +32,7 @@
 }
 
 .alert > .alert__close {
+  margin: 0;
   background: transparent;
   cursor: pointer;
   border: none;
