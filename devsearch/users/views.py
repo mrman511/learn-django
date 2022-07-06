@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import User
 from .models import Profile
-from .forms import CustomUserCreationForm, ProfileForm
+from .forms import CustomUserCreationForm, ProfileForm, SkillForm
 
 def loginUser(request):
   page = "login"
@@ -110,7 +110,6 @@ def editAccount(request):
 
   if request.method=='POST':
     form = ProfileForm(request.POST, request.FILES, instance=profile)
-    print("PROFILEFORM", form)
     if form.is_valid():
       form.save();
 
@@ -120,3 +119,65 @@ def editAccount(request):
     'form': form
   }
   return render(request, 'users/profile_form.html', context)
+
+@login_required(login_url="login")
+def addSkill(request):
+  page = 'add-skill'
+  profile = request.user.profile
+  skillForm = SkillForm()
+
+  if request.method == 'POST':
+    skillForm = SkillForm(request.POST)
+    if skillForm.is_valid():
+      newSkill = skillForm.save(commit=False)
+      newSkill.owner = profile
+      newSkill.save()
+      return redirect('account')
+
+
+
+  context = {
+    'page': page,
+    'profile': profile,
+    'skill_form': skillForm
+  }
+
+  return render(request, 'users/account.html', context)
+
+@login_required(login_url="login")
+def deleteSkill(request, pk):
+  page = 'delete'
+  profile = request.user.profile
+  skill = profile.skill_set.get(id=pk)
+
+  if request.method == 'POST':
+    skill.delete()
+    return redirect('account')
+
+  context = {
+    'skill': skill,
+    'page': page,
+    'profile': profile,
+  }
+  return render(request, 'users/account.html', context)
+
+def editSkill(request, pk):
+  page = 'edit-skill'
+  profile = request.user.profile
+  skill = profile.skill_set.get(id=pk)
+  skillForm = SkillForm(instance = skill)
+
+  if request.method == 'POST':
+    skillForm = SkillForm(request.POST, instance=skill)
+    if skillForm.is_valid():
+      skillForm.save()
+      return redirect('account')
+
+  context = {
+    'skill': skill,
+    'page': page,
+    'profile': profile,
+    'skill_form': skillForm
+  }
+  return render(request, 'users/account.html', context)
+

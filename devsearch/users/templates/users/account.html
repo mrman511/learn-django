@@ -56,10 +56,46 @@
             {{ profile.bio }}
           </p>
         </div>
-        <div class="settings">
+
+
+        <div id="skill-form"   class="settings">
           <h3 class="settings__title">Skills</h3>
-          <a class="tag tag--pill tag--sub settings__btn tag--lg" href="#"><i class="im im-plus"></i> Add Skill</a>
+
+          {% if  page == 'add-skill' or page == 'edit-skill' %}
+
+            {% if page == 'add-skill' %}
+            <form action="{% url 'add-skill' %}" method="POST">
+            {% else %}
+            <form action="{% url 'edit-skill' skill.id %}" method="POST">
+            {% endif %}
+
+            {% csrf_token %}
+            {% for field in skill_form %}
+            <div id="skill-field" class="form__field">
+              <label for="formInput#text">{{ field.label }} </label>
+              {{ field }}
+            </div>
+            {% endfor %}
+            <a class="btn btn--sub btn--md  my-md" href="{% url 'account' %}">Cancel</a>
+            <input class="btn btn--sub btn--md  my-md" type="submit" value="Submit">
+          </form>
+
+
+          {% elif page == 'delete' %}
+          <h4>Are you sure?</h4>
+          <p>You are about to delete {{ skill.name }} from your skills</p>
+          <form action="" method="POST">
+            {% csrf_token %}
+            <input type="submit" value='Confirm'>
+            <a href="{% url 'account' %}">Cancel</a>
+          </form>
+
+
+          {% else %}
+          <a class="tag tag--pill tag--sub settings__btn tag--lg" href="{% url 'add-skill' %}"><i class="im im-plus"></i> Add Skill</a>
+          {% endif %}
         </div>
+
 
         <table class="settings__table">
           {% for skill in profile.skill_set.all %}
@@ -72,8 +108,8 @@
               </p>
             </td>
             <td class="settings__tableActions">
-              <a class="tag tag--pill tag--main settings__btn" href="#"><i class="im im-edit"></i> Edit</a>
-              <a class="tag tag--pill tag--main settings__btn" href="#"><i class="im im-x-mark-circle-o"></i>
+              <a class="tag tag--pill tag--main settings__btn" href="{% url 'edit-skill' skill.id %}"><i class="im im-edit"></i> Edit</a>
+              <a class="tag tag--pill tag--main settings__btn" href="{% url 'delete-skill' skill.id %}"><i class="im im-x-mark-circle-o"></i>
                 Delete</a>
             </td>
           </tr>          
@@ -83,8 +119,8 @@
               <h4>{{ skill.name }}</h4>
             </td>
             <td class="settings__tableActions">
-              <a class="tag tag--pill tag--main settings__btn" href="#"><i class="im im-edit"></i> Edit</a>
-              <a class="tag tag--pill tag--main settings__btn" href="#"><i class="im im-x-mark-circle-o"></i>
+              <a class="tag tag--pill tag--main settings__btn" href="{% url 'edit-skill' skill.id %}"><i class="im im-edit"></i> Edit</a>
+              <a class="tag tag--pill tag--main settings__btn" href="{% url 'delete-skill' skill.id %}"><i class="im im-x-mark-circle-o"></i>
                 Delete</a>
             </td>
           </tr>

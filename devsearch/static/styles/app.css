@@ -565,6 +565,10 @@ img {
   Account Settings
 ========================*/
 
+#skill-form {
+  flex-direction: column;
+}
+
 .settingsPage .dev > .settings__btn {
   display: inline-block;
   margin-bottom: 3rem;
@@ -575,6 +579,7 @@ img {
   justify-content: space-between;
   align-items: center;
 }
+
 
 .settings__title {
   font-size: 2.4rem;
