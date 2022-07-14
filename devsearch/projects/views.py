@@ -1,15 +1,31 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-from .models import Project
+from django.core.paginator import Paginator
+from .models import Project, Tag
+from .utils import searchProjects, paginateProjects
 from .forms import ProjectForm
 
 
 # Create your views here.
 def projects(request):
-  projects = Project.objects.all()
+  projects, search_query = searchProjects(request)
+
+  # paginator, projects = projects, page = paginateProjects(request, projects)
+  page = 1
+
+  # pagination
+  if request.GET.get('page'):
+    page = request.GET.get('page')
+  
+  paginator = Paginator(projects, 6)
+  projects = paginator.page(page)
+
   context = {
-    'projects': projects
+    'projects': projects,
+    'paginator': paginator,
+    'search_query': search_query,
+    'page': page
     }
   return render(request, 'projects/projects.html', context)
 

@@ -3,6 +3,8 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.core.paginator import Paginator
+from .utils import searchProfiles
 from .models import Profile
 from .forms import CustomUserCreationForm, ProfileForm, SkillForm
 
@@ -56,24 +58,37 @@ def registerUser(request):
     else:
       messages.error(request, 'An error has occurred during registation')
 
-
-
   context = {
     'page': page,
     'form': form
     }
   return render(request, 'users/login_register.html', context)
 
-
-
-
+#######################################
+#
+#  PROFILES
+#
+######################################
 
 # Create your views here.
 def profiles(request):
-  profiles = Profile.objects.all()
+  profiles, search_query = searchProfiles(request)
+
+  # paginator, projects = projects, page = paginateProjects(request, projects)
+  page = 1
+
+  # pagination
+  if request.GET.get('page'):
+    page = request.GET.get('page')
   
+  paginator = Paginator(profiles, 4)
+  profiles = paginator.page(page)
+
   context = {
-    'profiles': profiles
+    'profiles': profiles,
+    'paginator': paginator,
+    'page': page,
+    'search_query': search_query
   }
   return render(request, 'users/profiles.html', context)
 
@@ -81,10 +96,6 @@ def userProfile(request, pk):
   profile = Profile.objects.get(id=pk)
   skills = profile.skill_set.exclude(description__exact="")
   subSkills = profile.skill_set.filter(description__exact="")
-
-  print(subSkills)
-  # for skill in profile.skill_set.all():
-  #   print('-' + skill.name)
 
   context = {
     'profile': profile,
@@ -119,6 +130,12 @@ def editAccount(request):
     'form': form
   }
   return render(request, 'users/profile_form.html', context)
+
+#######################################
+#
+#  SKILLS
+#
+######################################
 
 @login_required(login_url="login")
 def addSkill(request):
@@ -161,6 +178,7 @@ def deleteSkill(request, pk):
   }
   return render(request, 'users/account.html', context)
 
+@login_required(login_url='login')
 def editSkill(request, pk):
   page = 'edit-skill'
   profile = request.user.profile
