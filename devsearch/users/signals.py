@@ -3,6 +3,8 @@ from .models import Profile
 
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
+from django.core.mail import send_mail
+from django.conf import settings
 
 # @receiver(post_save, sender=Profile)
 def createProfile(sender, instance, created, **kwargs):
@@ -13,6 +15,17 @@ def createProfile(sender, instance, created, **kwargs):
       username=user.username,
       email=user.email,
       name=user.first_name
+    )
+
+    subject = 'Thanks for Registering!'
+    message = 'Welcome to devsearch!, \n\n This site was created during the udemy Python Django, The Complete course. As such this site is not intended for professional use and is rather created as a proof of knowledge. \n\n Thank you\n Paul Bodner'
+
+    send_mail(
+      subject,
+      message,
+      settings.EMAIL_HOST_USER,
+      [profile.email],
+      fail_silently=False,
     )
 
 def updateUser(sender, instance, created, **kwargs):
