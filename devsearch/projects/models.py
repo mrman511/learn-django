@@ -64,4 +64,4 @@ class Tag(models.Model):
 
   def __str__(self):
     return self.name
-  
+
