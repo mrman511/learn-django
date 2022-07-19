@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 from django import forms
-from .models import Project
+from .models import Project, Review
 
 class ProjectForm(ModelForm):
   class Meta:
@@ -21,3 +21,25 @@ class ProjectForm(ModelForm):
       field.widget.attrs.update({'class': 'input'})
 
     #fields = '__all__'
+
+class ReviewForm(ModelForm):
+  class Meta:
+    model = Review
+    fields = ['body', 'value']
+    # widgets ={ 
+    #   'value': forms.CheckboxSelectMultiple(),
+    # }
+
+    labels = {
+      'body': 'Add a comment with your vote',
+      'value': 'Place Your Vote',
+    }
+
+  def __init__(self, *args, **kwargs):
+    super(ReviewForm, self).__init__(*args, **kwargs)
+    # self.fields['title'].widget.attrs.update({'class': 'input', 'placeholder': 'Add Title'})
+    # self.field['description'].widget.attrs.update({'class': 'input', 'placeholder': 'Add Description'})
+    # self.field['description'].widget.attrs.update({'class': 'input', 'placeholder': 'Add Description'})
+
+    for name, field in self.fields.items():
+      field.widget.attrs.update({'class': 'input'})
