@@ -5,8 +5,8 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from .utils import searchProfiles
-from .models import Profile
-from .forms import CustomUserCreationForm, ProfileForm, SkillForm
+from .models import Profile, Message
+from .forms import CustomUserCreationForm, ProfileForm, SkillForm, MessageForm
 
 def loginUser(request):
   page = "login"
@@ -108,7 +108,6 @@ def userProfile(request, pk):
 @login_required(login_url="login")
 def userAccount(request):
   profile = request.user.profile
-  print(profile)
   context = {
     'profile': profile
     }
@@ -199,3 +198,63 @@ def editSkill(request, pk):
   }
   return render(request, 'users/account.html', context)
 
+##################################
+#
+# #########  MESSAGES  #########
+#
+#################################
+
+@login_required(login_url="login")
+def inbox(request):
+  profile = request.user.profile
+  profileMessages = profile.messages.all()
+  unreadCount = len(list(filter(lambda a: not a.is_read, profileMessages)))
+
+  context = {
+    'profile': profile,
+    'profileMessages': profileMessages,
+    'unreadCount': unreadCount
+  }
+
+  return render(request, 'users/inbox.html', context)
+
+@login_required(login_url="login")
+def showMessage(request, pk):
+  currentMessage = Message.objects.get(id=pk)
+
+  if not message.is_read:
+    currentMessage.is_read = True
+    currentMessage.save()
+
+  context = {
+    'currentMessage': currentMessage
+  }
+
+  return render(request, 'users/message.html', context)
+
+@login_required(login_url="login")
+def sendMessage(request, pk):
+  recipient = Profile.objects.get(id=pk)
+  sender = request.user.profile
+  form = MessageForm()
+
+  if request.method == 'POST':
+    form = MessageForm(request.POST)
+
+    if form.is_valid():
+      newMessage = form.save(commit=False)
+
+      newMessage.recipient = recipient
+      newMessage.sender = sender
+      newMessage.name = sender.name
+      newMessage.save()
+
+      return redirect('user-profile', pk)
+
+
+  context = {
+    'recipient': recipient,
+    'form': form
+  }
+
+  return render(request, 'users/message_form.html', context)
