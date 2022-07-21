@@ -72,8 +72,8 @@ def registerUser(request):
 
 # Create your views here.
 def profiles(request):
-  profiles, search_query = searchProfiles(request)
-
+  profiles, search_query, sort_by = searchProfiles(request)
+  
   # paginator, projects = projects, page = paginateProjects(request, projects)
   page = 1
 
@@ -88,7 +88,8 @@ def profiles(request):
     'profiles': profiles,
     'paginator': paginator,
     'page': page,
-    'search_query': search_query
+    'search_query': search_query,
+    'sort_by': sort_by
   }
   return render(request, 'users/profiles.html', context)
 
@@ -96,6 +97,7 @@ def userProfile(request, pk):
   profile = Profile.objects.get(id=pk)
   skills = profile.skill_set.exclude(description__exact="")
   subSkills = profile.skill_set.filter(description__exact="")
+  profile.getProjectData
 
   context = {
     'profile': profile,
@@ -108,6 +110,8 @@ def userProfile(request, pk):
 @login_required(login_url="login")
 def userAccount(request):
   profile = request.user.profile
+  profile.getProjectData
+
   context = {
     'profile': profile
     }

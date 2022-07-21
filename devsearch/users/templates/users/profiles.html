@@ -18,7 +18,37 @@
             <input class="input input--text" id="formInput#search" type="text" name="search_query" 
               value="{{ seach_query }}" placeholder="Search by developer name" />
           </div>
+          <input type="text" value = "{{sort_by }}" name="sort_by" hidden>
           <input class="btn btn--sub btn--lg" type="submit" value="Search" />
+        </form>
+
+        <form action="{% url 'profiles' %}">
+          <label> Sort By
+            <select name="sort_by" id="formInput#sort-by" value="{{ sort_by }}" onchange="this.form.submit()">
+              {% if sort_by == "-review_count" %}
+              <option value="-review_count">Most Reviews</option>
+              <option value="-project_count">Most Projects</option>
+              <option value="created">Oldest</option>
+              <option value="-created">Newset</option>   
+              {% elif sort_by == "-project_count" %}
+              <option value="-project_count">Most Projects</option>
+              <option value="-review_count">Most Reviews</option>
+              <option value="created">Oldest</option>
+              <option value="-created">Newset</option>   
+              {% elif sort_by == "created" %}
+              <option value="created">Oldest</option>
+              <option value="-review_count">Most Reviews</option>
+              <option value="-project_count">Most Projects</option>
+              <option value="-created">Newset</option>   
+              {% elif sort_by == "-created" %}
+              <option value="-created">Newset</option>   
+              <option value="-review_count">Most Reviews</option>
+              <option value="-project_count">Most Projects</option>
+              <option value="created">Oldest</option>
+              {% endif %}
+            </select>
+          </label>
+          <input type="text" name="search_query" value="{{ search_query }}" hidden>
         </form>
 
       </div>
