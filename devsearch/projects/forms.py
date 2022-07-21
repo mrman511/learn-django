@@ -5,10 +5,10 @@ from .models import Project, Review
 class ProjectForm(ModelForm):
   class Meta:
     model = Project
-    fields = ['title', 'featured_image', 'description', 'demo_link', 'source_link', 'tags' ]
-    widgets ={ 
-      'tags': forms.CheckboxSelectMultiple(),
-    }
+    fields = ['title', 'featured_image', 'description', 'demo_link', 'source_link' ]
+    # widgets ={ 
+    #   'tags': forms.CheckboxSelectMultiple(),
+    # }
     
 
   def __init__(self, *args, **kwargs):
