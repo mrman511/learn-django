@@ -222,7 +222,7 @@ def inbox(request):
 def showMessage(request, pk):
   currentMessage = Message.objects.get(id=pk)
 
-  if not message.is_read:
+  if not currentMessage.is_read:
     currentMessage.is_read = True
     currentMessage.save()
 
