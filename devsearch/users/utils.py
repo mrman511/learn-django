@@ -8,7 +8,6 @@ def searchProfiles(request):
   if request.GET.get('sort_by'):
     sort_by=request.GET.get('sort_by')
 
-  print("SORT_BY: ",sort_by)
 
   if request.GET.get('search_query'):
     search_query = request.GET.get('search_query')
