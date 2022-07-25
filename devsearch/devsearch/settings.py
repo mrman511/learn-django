@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-@@=5)liotln19it1s+wcr-5trgq04hfg*n#a7o)q5lh3sil5hh
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'paul-devsearch.herokuapp.com']
 
 
 # Application definition
@@ -91,6 +91,7 @@ SIMPLE_JWT = {
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -211,3 +212,6 @@ AWS_STORAGE_BUCKET_NAME = 'paul-devsearch-bucket'  #env('AWS_STORAGE_BUCKET_NAME
 
 AWS_S3_HOST = 's3-website-us-west-2.amazonaws.com'
 AWS_S3_SIGNATURE_VRSION="s3v4"
+
+if os.getcwd() == '/app':
+    DEBUG = False
